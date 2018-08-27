@@ -5,11 +5,14 @@ Created on Sat Aug 25 11:30:32 2018
 @author: ztsch
 """
 
+
+
 def plot_decision_regions(X, y, classifier, test_idx = None,
                           resolution = .02):
+    
     # imports
     from matplotlib.colors import ListedColormap
-    #import matplotlib.pyplot as plt
+    import matplotlib.pyplot as plt
     import numpy as np
     
     # setup marker generator and color map
@@ -23,20 +26,23 @@ def plot_decision_regions(X, y, classifier, test_idx = None,
     xx1, xx2 = np.meshgrid(np.arange(x1_min, x1_max, resolution),
                            np.arange(x2_min, x2_max, resolution))
     
-#    Z = classifier.predict(np.array([xx1.ravel(), xx2.ravel()]).T)
-#    Z = Z.reshape(xx1.shape)
-#    plt.contourf(Z, alpha = .4, cmap = cmap)
-#    plt.xlim(xx1.min(), xx1.max())
-#    plt.ylim(xx2.min(), xx2.max())
-#    
-#    # plot all samples
-#    for idx, cl in enumerate(np.unique(y)):
-#        plt.scatter(x=X[y == cl, 0], y = X[y == cl, 1],
-#                    alpha = 0.8, c=cmap(idx),
-#                    marker = markers[idx], label = cl)
-#    
-#    if test_idx:
-#        X_test, y_test = X[test_idx, :], y[test_idx]
-#        plt.scatter(X_test[:, 0], X_test[:, 1], c = ' ',
-#                    alpha = 1, linewidths = 1, marker = '0',
-#                    s = 55, label = 'test set')
+    # reshape arrays
+    xx2 = xx2.reshape(xx1.shape)
+    
+    Z = classifier.predict(np.array([xx1.ravel(), xx2.ravel()]).T)
+    Z = Z.reshape(xx1.shape)
+    plt.contourf(xx1, xx2, Z, alpha = .4, cmap = cmap)
+    plt.xlim(xx1.min(), xx1.max())
+    plt.ylim(xx2.min(), xx2.max())
+    
+    # plot all samples
+    for idx, cl in enumerate(np.unique(y)):
+        plt.scatter(x=X[y == cl, 0], y = X[y == cl, 1],
+                    alpha = 0.8, c=cmap(idx),
+                    marker = markers[idx], label = cl)
+    
+    if test_idx:
+        X_test, y_test = X[test_idx, :], y[test_idx]
+        plt.scatter(X_test[:, 0], X_test[:, 1],
+                    alpha = 1, linewidths = 1, marker = 'o',
+                    s = 55, label = 'test set')
