@@ -8,7 +8,6 @@ Created on Tue Sep  4 17:10:55 2018
 from sklearn import datasets
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
 from plot_decision_regions import plot_decision_regions
 import numpy as np
 import matplotlib.pyplot as plt
@@ -27,7 +26,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = .3,
 X_combined = np.vstack((X_train, X_test))
 y_combined = np.hstack((y_train, y_test))
 
-
+# fit decision tree
 tree = DecisionTreeClassifier(criterion='entropy', max_depth=3,
                               random_state=0)
 tree.fit(X_train, y_train)
