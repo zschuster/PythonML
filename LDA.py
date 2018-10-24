@@ -21,7 +21,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y,test_size = 0.3,
 # standardize data
 SC = StandardScaler()
 X_train_std = SC.fit_transform(X_train)
-X_test_Std = SC.transform(X_test)
+X_test_std = SC.transform(X_test)
 
 import numpy as np
 
@@ -105,3 +105,46 @@ w = np.hstack((((eigen_pairs[0][1][:, np.newaxis].real) * -1),
                eigen_pairs[1][1][:, np.newaxis].real))
 
 print("Matrix W: \n", w)
+
+# project training data onto new space and plot
+X_train_lda = X_train_std.dot(w)
+colors = ['r', 'b', 'g']
+markers = ['s', 'x', 'o']
+for l, c, m in zip(np.unique(y_train), colors, markers):
+    plt.scatter(X_train_lda[y_train==l, 0]*(-1),
+                X_train_lda[y_train==l, 1]*(-1),
+                c=c, label = l, marker = m)
+plt.xlabel("LD 1")
+plt.ylabel("LD 2")
+plt.legend(loc = "lower right")
+plt.show()
+
+
+"""Run logistic regression on new feature space (sklearn LDA method)"""
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
+from sklearn.linear_model import LogisticRegression
+from plot_decision_regions import plot_decision_regions
+
+lda = LDA(n_components = 2)
+x_train_lda = lda.fit_transform(X_train_std, y_train)
+
+lr = LogisticRegression()
+lr = lr.fit(X_train_lda, y_train)
+plot_decision_regions(X_train_lda, y_train, classifier = lr)
+plt.xlabel("LD 1")
+plt.ylabel("LD 2")
+plt.legend(loc = "lower left")
+plt.show()
+
+
+""" How can we do on the test set?"""
+
+X_test_lda = lda.transform(X_test_std)
+plot_decision_regions(X_test_lda, y_test, classifier = lr)
+plt.xlabel("LD 1")
+plt.ylabel("LD 2")
+plt.legend(loc = "lower left")
+plt.show()
+
+
+"""lines 128-147 need to be fixed. Plots produced are not correct"""
